@@ -17,10 +17,23 @@
  * 3. 组件对插件同理需要进行渲染处理，因此插件要从函数变为对象，拥有渲染和控制用户行为的能力
  */
 
+/**
+ * v2.1思路追加
+ * 尝试CSS模板化，使得轮播图的圆角和小圆圈的颜色由组件外部控制
+ * 两种方法：
+ * 1. 类名切换（圆角）
+ * 2. 通过props修改全局CSS变量值（根元素变量），来达到更换主题的效果
+ *    使用全局CSS变量是考虑到组件内部可能有多处应用到全局变量的主题色或是主题色的变种
+ */
+
 class Slider {
   constructor(id, opts = {
     images: [],
-    cycle: 3000
+    cycle: 3000,
+    style: {
+      radius: false,
+      themeColor: 'red'
+    }
   }) {
     this.container = document.getElementById(id); // 轮播图容器，此时拿到的容器是一个空的div，需要进行渲染
     this.opts = opts;
@@ -37,6 +50,10 @@ class Slider {
     const content = images.map((img, i) => `<li class="slider__item${i===0?'--selected':''}">
                           <img src="${img}" />
                       </li>`);
+    // 样式渲染
+    const style = this.opts.style;
+    this.container.className += style.radius ? ' slider--radius' : '';
+    document.documentElement.style.setProperty('--theme-color', style.themeColor);
     return `<ul>${content.join("")}</ul>`;
   }
 
@@ -209,7 +226,11 @@ const mySlider = new Slider('my-slider', {
     'https://p2.ssl.qhimg.com/t01645cd5ba0c3b60cb.jpg',
     'https://p4.ssl.qhimg.com/t01331ac159b58f5478.jpg'
   ],
-  cycle: 3000
+  cycle: 3000,
+  style: {
+    radius: true,
+    themeColor: 'pink'
+  }
 });
 mySlider.registerPlugins(pluginControl, pluginPrevious, pluginNext);
 mySlider.start();

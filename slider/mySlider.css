@@ -1,3 +1,7 @@
+:root {
+  --theme-color: red;
+}
+
 #my-slider{
   position: relative;
   display: inline-block;
@@ -95,5 +99,9 @@
 }
 
 .slider__control-btn--selected {
-  background-color: red;
+  background-color: var(--theme-color);
+}
+
+.slider--radius img {
+  border-radius: 20px;
 }
